@@ -1,0 +1,12 @@
+[package]
+name = "pf_sandbox_website"
+version = "0.1.0"
+authors = ["Lucas Kent <rubickent@gmail.com>"]
+
+[dependencies]
+rocket = "0.3"
+rocket_codegen = "0.3"
+rocket_contrib = { version = "0.3", features = ["handlebars_templates"] }
+serde = "1"
+serde_derive = "1"
+serde_json = "1"
