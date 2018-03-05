@@ -54,7 +54,7 @@ fn files(file: PathBuf) -> Option<NamedFile> {
 }
 
 fn main() {
-    if env::current_dir().unwrap().file_name().unwrap() != OsStr::new("flashcards") {
+    if env::current_dir().unwrap().file_name().unwrap() != OsStr::new("data") {
         // templates are correctly located by finding the Rocket.toml
         // However static files are not handled, so if we aren't in the root directory, close immediately to avoid headaches.
         println!("Wrong directory, dummy!");
@@ -64,16 +64,4 @@ fn main() {
         .mount("/", routes![index, filter, files])
         .attach(Template::fairing())
         .launch();
-}
-
-pub fn get_path() -> PathBuf {
-    match env::home_dir() {
-        Some (mut home) => {
-            home.push("Flashcards");
-            home
-        }
-        None => {
-            panic!("could not get path of home");
-        }
-    }
 }
