@@ -12,6 +12,8 @@ use rocket::response::NamedFile;
 use std::path::{Path, PathBuf};
 use std::env;
 use std::ffi::OsStr;
+use std::fs::File;
+use std::io::Read;
 
 #[derive(Serialize, Clone)]
 pub struct Card {
@@ -31,16 +33,33 @@ fn index() -> Template {
 
 #[get("/<request>")]
 fn filter(request: String) -> Template {
-    let mut cards = vec!();
-    cards.push(Card {
-        front: String::from("FOO"),
-        back: String::from("BAR")
-    });
+    let mut file = match File::open("flashcards.txt") {
+        Ok(file) => file,
+        Err(err) => panic!("Failed to open flashcards.txt: {}", err)
+    };
+    let mut contents = String::new();
+    if let Err(err) = file.read_to_string(&mut contents) {
+        panic!("Failed to read flashcards.txt: {}", err)
+    };
 
-    cards.push(Card {
-        front: String::from("ひらがな"),
-        back: String::from("hiragana")
-    });
+    let mut section = String::new();
+    let mut cards = vec!();
+    for line in contents.lines() {
+        let line = line.trim();
+        if line.len() == 0 { }
+        else if !line.contains("=") {
+            section = String::from(line);
+        }
+        else if section.starts_with(&request) {
+            let mut sides = line.split("=");
+            let front = String::from(sides.next().unwrap());
+            let back = String::from(sides.next().unwrap());
+            cards.push(Card {
+                front,
+                back
+            });
+        }
+    }
 
     let cards_json = serde_json::to_string(&cards).unwrap();
     let page = Page { cards_json };
