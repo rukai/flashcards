@@ -45,16 +45,26 @@ fn filter(request: String) -> Template {
 
     let mut section = String::new();
     let mut cards = vec!();
+    let mut flip = false;
     for line in contents.lines() {
         let line = line.trim();
         if line.len() == 0 { }
         else if !line.contains("=") {
-            section = String::from(line);
+            flip = line.starts_with('?');
+            section = String::from(line.trim_left_matches('?'));
         }
         else if section.starts_with(&request) {
             let mut sides = line.split("=");
             let front = String::from(sides.next().unwrap());
             let back = String::from(sides.next().unwrap());
+
+            if flip {
+                cards.push(Card {
+                    front: back.clone(),
+                    back: front.clone(),
+                });
+            }
+
             cards.push(Card {
                 front,
                 back

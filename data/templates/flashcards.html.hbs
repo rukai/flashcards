@@ -83,10 +83,10 @@
         var card = card_shuffler.get();
         var next = function() {
             if (front) {
-                $('#card_text').text(card.front);
+                $('#card_text').text('Q: ' + card.front);
             }
             else {
-                $('#card_text').text(card.back);
+                $('#card_text').text('A: ' + card.back);
                 card = card_shuffler.get();
             }
             front = !front;
