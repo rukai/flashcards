@@ -1,64 +1,10 @@
 body {
-    padding-top: 5rem;
-    padding-bottom: 1rem;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     color: rgb(255, 255, 255);
     background-color: rgb(30, 30, 30);
 }
 
-.nowrap {
-    white-space: nowrap;
-}
-
-.prewrap {
-    white-space: pre-wrap;
-}
-
 h1 {
-    font-size: 2.8rem;
-}
-
-h2 {
-    font-size: 2rem;
-}
-
-h3 {
-    margin-top: 0.5rem;
-    font-size: 1.3rem;
-}
-
-/* Landing page */
-
-.hook {
     font-size: 2rem;
     text-align: center;
-    padding-top: 1rem;
-    padding-bottom: 2.6rem;
-}
-
-.video {
-    padding-top: 1rem;
-    padding-left: 1rem;
-    padding-bottom: 1rem;
-}
-
-/* Documentation */
-
-.doc-heading {
-    color: #E9CB9A
-}
-
-/* Builds table */
-
-td {
-    padding-right: 1rem;
-    padding-left: 1rem;
-}
-
-tr.row-spacer {
-    height: 1.6rem;
-}
-
-#buildlist {
-    margin-top: 3rem;
 }

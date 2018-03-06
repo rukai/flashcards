@@ -1,10 +1,99 @@
-{{#*inline "page"}}
-<script type="javascript">
-{{cards_json}} <!-- Need to prevent escaping the json -->
-</script>
+<!DOCTYPE html>
+<html lang=en>
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="stylesheet" type="text/css" href="static/style.css">
+        {{#if request}}
+        <title>Flashcards | {{request}}</title>
+        {{else}}
+        <title>Flashcards</title>
+        {{/if}}
+    </head>
+    <body>
+        <h1 id="card_text"></h1>
 
-<p> Testing: {{cards_json}}<p>
-<h1 id="card_text">Text</h1>
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script>
+        "use strict";
 
-{{/inline}}
-{{~> base title="Flashcards"~}}
+        // from https://github.com/sindresorhus/array-shuffle/blob/master/index.js
+        function shuffle(arr) {
+            if (!Array.isArray(arr)) {
+                throw new TypeError('Expected Array, got ' + typeof arr);
+            }
+
+            var rand;
+            var tmp;
+            var len = arr.length;
+            var ret = arr.slice();
+
+            while (len) {
+                rand = Math.floor(Math.random() * len--);
+                tmp = ret[len];
+                ret[len] = ret[rand];
+                ret[rand] = tmp;
+            }
+
+            return ret;
+        };
+
+        // from https://github.com/ayamflow/infinite-random-list/blob/master/index.js
+        function InfiniteRandomList(items) {
+            this.set(items);
+        }
+
+        InfiniteRandomList.prototype.set = function(items) {
+            this.original = items.slice();
+            this.items = [];
+            this.lastItem = null;
+        };
+
+        InfiniteRandomList.prototype.get = function() {
+            var item = this.items.pop();
+
+            if (!item) {
+                this.items = shuffle(this.original.slice());
+                var l = this.items.length - 1;
+                // If first shuffled item is the same as the last one, push it further into the pile
+                if (this.original.length > 1 && this.items[l] == this.lastItem) {
+                    var offset = Math.max(0, Math.floor(this.original.length * 0.5));
+                    var swapIndex = Math.floor(Math.random() * (this.original.length - offset));
+                    var temp = this.items[swapIndex];
+                    this.items[swapIndex] = this.items[l];
+                    this.items[l] = temp;
+                }
+
+                return this.get();
+
+            } else {
+                // Store last item to compare to the newly shuffled array
+                this.lastItem = item;
+            }
+
+            return item;
+        };
+
+
+        // flashcard logic
+        var cards = {{{cards_json}}}
+        var front = true;
+        var card_shuffler = new InfiniteRandomList(cards);
+        var card = card_shuffler.get();
+        var next = function() {
+            if (front) {
+                $('#card_text').text(card.front);
+            }
+            else {
+                $('#card_text').text(card.back);
+                card = card_shuffler.get();
+            }
+            front = !front;
+        }
+        next();
+        $('html').click(next);
+        $('html').keypress(next);
+        </script>
+    </body>
+</html>

@@ -23,6 +23,7 @@ pub struct Card {
 
 #[derive(Serialize, Clone)]
 pub struct Page {
+    request: String,
     cards_json: String,
 }
 
@@ -62,7 +63,7 @@ fn filter(request: String) -> Template {
     }
 
     let cards_json = serde_json::to_string(&cards).unwrap();
-    let page = Page { cards_json };
+    let page = Page { cards_json, request };
 
     Template::render("flashcards", page)
 }
