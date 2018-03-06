@@ -1,5 +1,5 @@
 [package]
-name = "pf_sandbox_website"
+name = "flashcards"
 version = "0.1.0"
 authors = ["Lucas Kent <rubickent@gmail.com>"]
 
